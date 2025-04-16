@@ -4,13 +4,8 @@
 
 ## Описание
 
-Система состоит из трёх компонентов:
-
-- `producer_orders.py` — отправляет уведомления о **новых заказах**
-- `producer_payments.py` — отправляет уведомления о **платежах**
-- `consumer.py` — принимает и обрабатывает **все уведомления**
-
-Все взаимодействия происходят через очередь `notification_queue`, реализованную на базе RabbitMQ.
+Очередь order_queue — только для заказов. Очередь payment_queue — только для платежей. 
+Один consumer слушает order_queue. Другой consumer — payment_queue.
 
 ---
 
@@ -39,15 +34,19 @@ docker ps
 
 ### 3. Открой веб-интерфейс RabbitMQ
 Перейди в браузере по адресу: http://localhost:15672
-Логин: admin
-Пароль: admin
+- Логин: admin
+- Пароль: admin
 
 ### Запуск отправителей и получателя
 
-Шаг 1 — запусти потребителя (consumer):
-
+В одном терминале:
 ```bash
-python3 consumer.py
+python3 consumer_orders.py
+```
+
+В другом терминале:
+```bash
+python3 consumer_payments.py
 ```
 
 Шаг 2 — в другом терминале запусти отправителя заказов:
@@ -65,22 +64,19 @@ python3 producer_payments.py
 ### Структура проекта
 
 ```bash
-mqr/
-├── docker-compose.yml         # конфигурация RabbitMQ
-├── producer_orders.py         # отправка заказов
-├── producer_payments.py       # отправка платежей
-├── consumer.py                # приём и обработка всех сообщений
+RabbitMQ_notification_system/
+├── docker-compose.yml
+├── producer_orders.py
+├── producer_payments.py
+├── consumer_orders.py  
+├── consumer_payments.py
 └── README.md
 ```
+---
 
-### Примечания
+![image](https://github.com/user-attachments/assets/03ff4dc2-7a7d-4805-86b2-4312827e6bc8)
 
-Все сообщения отправляются в одну очередь notification_queue.
-Потребитель различает типы уведомлений по полю type (new_order, payment).
-![image](https://github.com/user-attachments/assets/3a5c6560-61de-4315-a5f1-92e98e79fa6a)
-
-
-Используется RabbitMQ Management UI для удобства мониторинга.
-![image](https://github.com/user-attachments/assets/a3bd8509-78c4-4edd-98eb-c501d8504ff3)
+---
+![image](https://github.com/user-attachments/assets/6520d866-3c90-4fe3-90f4-fb3295bfa8f5)
 
 
