@@ -4,7 +4,7 @@ import json
 def callback(ch, method, properties, body):
     message = json.loads(body)
     if message['type'] == 'payment':
-        print(f"💰 Payment: #{message['payment_id']} of ${message['amount']} from {message['user_email']}")
+        print(f"Payment: #{message['payment_id']} of ${message['amount']} from {message['user_email']}")
 
 credentials = pika.PlainCredentials('admin', 'admin')
 parameters = pika.ConnectionParameters('localhost', 5672, '/', credentials)
