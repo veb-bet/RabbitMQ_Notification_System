@@ -8,7 +8,7 @@ parameters = pika.ConnectionParameters('localhost', 5672, '/', credentials)
 connection = pika.BlockingConnection(parameters)
 channel = connection.channel()
 
-channel.queue_declare(queue='notification_queue')
+channel.queue_declare(queue='order_queue')
 
 for i in range(300):
     message = {
@@ -18,7 +18,7 @@ for i in range(300):
     }
     channel.basic_publish(
         exchange='',
-        routing_key='notification_queue',
+        routing_key='order_queue',
         body=json.dumps(message)
     )
     print(f"[order] Sent order #{message['order_id']}")
